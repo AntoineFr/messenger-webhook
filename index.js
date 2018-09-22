@@ -22,7 +22,7 @@ app.post('/webhook', (req, res) => {
   if (body.object === 'page') {
 
     // Iterate over each entry - there may be multiple if batched
-    body.entry.forEach(function(entry) {
+    body.entry.forEach((entry) => {
 
       // Get the webhook event. entry.messaging is an array, but 
       // will only ever contain one event, so we get index 0
@@ -57,7 +57,7 @@ app.post('/webhook', (req, res) => {
 app.get('/webhook', (req, res) => {
 
   // Your verify token. Should be a random string.
-  const VERIFY_TOKEN = "zeA5gWnAPKzey97X7n4L4uw82NU6U65m"
+  const VERIFY_TOKEN = 'zeA5gWnAPKzey97X7n4L4uw82NU6U65m';
 
   // Parse the query params
   let mode = req.query['hub.mode'];
@@ -90,7 +90,7 @@ function handleMessage(sender_psid, received_message) {
 
     // Create the payload for a basic text message
     response = {
-      "text": `You sent the message: "${received_message.text}". Now send me an image!`
+      'text': `You sent the message: "${received_message.text}". Now send me an image!`
     }
 
   } else if (received_message.attachments) {
@@ -99,24 +99,24 @@ function handleMessage(sender_psid, received_message) {
     let attachment_url = received_message.attachments[0].payload.url;
     
     response = {
-      "attachment": {
-        "type": "template",
-        "payload": {
-          "template_type": "generic",
-          "elements": [{
-            "title": "Is this the right picture?",
-            "subtitle": "Tap a button to answer.",
-            "image_url": attachment_url,
-            "buttons": [
+      'attachment': {
+        'type': 'template',
+        'payload': {
+          'template_type': 'generic',
+          'elements': [{
+            'title': 'Is this the right picture?',
+            'subtitle': 'Tap a button to answer.',
+            'image_url': attachment_url,
+            'buttons': [
               {
-                "type": "postback",
-                "title": "Yes!",
-                "payload": "yes",
+                'type': 'postback',
+                'title': 'Yes!',
+                'payload': 'yes',
               },
               {
-                "type": "postback",
-                "title": "No!",
-                "payload": "no",
+                'type': 'postback',
+                'title': 'No!',
+                'payload': 'no',
               }
             ],
           }]
@@ -139,11 +139,11 @@ function handlePostback(sender_psid, received_postback) {
 
   // Set the response based on the postback payload
   if (payload === 'yes') {
-    response = { "text": "Thanks!" }
+    response = { 'text': 'Thanks!' }
   } else if (payload === 'no') {
-    response = { "text": "Oops, try sending another image." }
+    response = { 'text': 'Oops, try sending another image.' }
   } else {
-    response = { "text": "Payload inconnu" }
+    response = { 'text': 'Payload inconnu' }
   }
   // Send the message to acknowledge the postback
   callSendAPI(sender_psid, response);
@@ -153,23 +153,23 @@ function handlePostback(sender_psid, received_postback) {
 function callSendAPI(sender_psid, response) {
   // Construct the message body
   let request_body = {
-    "recipient": {
-      "id": sender_psid
+    'recipient': {
+      'id': sender_psid
     },
-    "message": response
+    'message': response
   }
 
   // Send the HTTP request to the Messenger Platform
   request({
-    "uri": "https://graph.facebook.com/v2.6/me/messages",
-    "qs": { "access_token": PAGE_ACCESS_TOKEN },
-    "method": "POST",
-    "json": request_body
+    'uri': 'https://graph.facebook.com/v2.6/me/messages',
+    'qs': { 'access_token': PAGE_ACCESS_TOKEN },
+    'method': 'POST',
+    'json': request_body
   }, (err, res, body) => {
     if (!err) {
       console.log('message sent!')
     } else {
-      console.error("Unable to send message:" + err);
+      console.error('Unable to send message:' + err);
     }
   }); 
 }
